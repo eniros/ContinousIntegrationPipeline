@@ -13,21 +13,22 @@ Launch an EC2 instance for server role and take SSH from system terminal
 
 Installing JDK which is an important Java based package required for Jenkins to run.
 
-sudo apt update
-sudo apt install default-jdk-headless
+```sudo apt update```
+```sudo apt install default-jdk-headless```
 
 <img width="676" alt="Screenshot 2022-12-02 at 01 43 04" src="https://user-images.githubusercontent.com/61475969/205195665-d5c5fce4-28a3-4b60-9b45-76a51c5a49d4.png">
 
 
-wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
-sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > \
+```wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -```
+```sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > \
     /etc/apt/sources.list.d/jenkins.list'
-sudo apt update
-sudo apt-get install jenkins
+```  
+```sudo apt update```
+```sudo apt-get install jenkins```
 
-sudo systemctl enable jenkins
-sudo systemctl start jenkins
-sudo systemctl status jenkins
+```sudo systemctl enable jenkins```
+```sudo systemctl start jenkins```
+```sudo systemctl status jenkins```
 
 <img width="676" alt="Screenshot 2022-12-02 at 01 43 58" src="https://user-images.githubusercontent.com/61475969/205195755-876ca190-2a06-4c4c-96db-da8b989a910b.png">
 
