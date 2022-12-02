@@ -16,7 +16,8 @@ Installing JDK which is an important Java based package required for Jenkins to 
 sudo apt update
 sudo apt install default-jdk-headless
 
-*********add image********
+<img width="676" alt="Screenshot 2022-12-02 at 01 43 04" src="https://user-images.githubusercontent.com/61475969/205195665-d5c5fce4-28a3-4b60-9b45-76a51c5a49d4.png">
+
 
 wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
 sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > \
@@ -28,7 +29,8 @@ sudo systemctl enable jenkins
 sudo systemctl start jenkins
 sudo systemctl status jenkins
 
-**********add image**********
+<img width="676" alt="Screenshot 2022-12-02 at 01 43 58" src="https://user-images.githubusercontent.com/61475969/205195755-876ca190-2a06-4c4c-96db-da8b989a910b.png">
+
 
 Since Jenkins runs on default port 8080, open this port on the Security Group inbound rule of the jenkins server on AWS
 
@@ -81,6 +83,74 @@ The console output shows the created job and the successful build. In this case 
 <img width="1000" alt="Screenshot 2022-12-02 at 01 21 01" src="https://user-images.githubusercontent.com/61475969/205193291-48e461fe-9e99-42c6-8e51-c3f7bc498565.png">
 
 <img width="786" alt="Screenshot 2022-12-02 at 01 21 39" src="https://user-images.githubusercontent.com/61475969/205193371-f8ef4a6e-fdf6-4278-90f6-12daafbc66e5.png">
+
+The created artifact can be found on local terminal too at this path /var/lib/jenkins/jobs/tooling_github/builds/<build_number>/archive/
+
+<img width="786" alt="Screenshot 2022-12-02 at 01 23 45" src="https://user-images.githubusercontent.com/61475969/205193630-88734087-54a5-4c73-9c73-ad8be0a61c3f.png">
+
+Configuring Jenkins To Copy Files(Artifact) to NFS Server
+
+To achieve this, we install the Publish Via SSH pluging on Jenkins. The plugin allows one to send newly created packages to a remote server and install them, start and stop services that the build may depend on and many other use cases.
+
+On main dashboard select "Manage Jenkins" and choose "Manage Plugins" menu item.
+
+<img width="786" alt="Screenshot 2022-12-02 at 01 25 23" src="https://user-images.githubusercontent.com/61475969/205193786-a2301492-52a2-42e4-ab86-56c0666a96dc.png">
+
+
+On "Available" tab search for "Publish Over SSH" plugin and install it
+
+<img width="417" alt="Screenshot 2022-12-02 at 01 26 04" src="https://user-images.githubusercontent.com/61475969/205193861-3116c81a-5d9e-4ff1-becd-7c93befcffbe.png">
+
+Configure the job to copy artifacts over to NFS server. On main dashboard select "Manage Jenkins" and choose "Configure System" menu item.
+
+Scroll down to Publish over SSH plugin configuration section and configure it to be able to connect to the NFS server:
+
+Provide a private key (content of .pem file that you use to connect to NFS server via SSH/Putty)
+
+Hostname – can be private IP address of NFS server 
+Username – ec2-user (since NFS server is based on EC2 with RHEL 8) 
+Remote directory – /mnt/apps since our Web Servers use it as a mointing point to retrieve files from the NFS server
+
+Test the configuration and make sure the connection returns Success. Remember, that TCP port 22 on NFS server must be open to receive SSH connections.
+
+<img width="1009" alt="Screenshot 2022-12-02 at 01 27 19" src="https://user-images.githubusercontent.com/61475969/205194009-079fcb63-07b3-4d01-ab64-3b16775cb7f5.png">
+
+<img width="1009" alt="Screenshot 2022-12-02 at 01 27 57" src="https://user-images.githubusercontent.com/61475969/205194074-decd885b-3694-4ce0-b03f-760bee7a0065.png">
+
+We specify ** on the send build artifacts tab meaning it sends all artifact to specified destination path(NFS Server).
+
+<img width="821" alt="Screenshot 2022-12-02 at 01 29 19" src="https://user-images.githubusercontent.com/61475969/205194192-3649999d-bcc7-4a7e-a2a4-e1b114175927.png">
+
+
+<img width="736" alt="Screenshot 2022-12-02 at 01 30 09" src="https://user-images.githubusercontent.com/61475969/205194292-599a1714-517c-4436-b037-7a825777e195.png">
+
+Now make a new change on the source code and push to github, Jenkins builds an artifact by downloading the code into its workspace based on the latest commit and via SSH it publishes the artifact into the NFS Server to update the source code.
+
+<img width="1393" alt="Screenshot 2022-12-02 at 01 50 23" src="https://user-images.githubusercontent.com/61475969/205196536-cb4d6e1c-9eca-402a-83d0-49c073acfef3.png">
+
+Configure the job/project to copy artifacts over to NFS server. On main dashboard select “Manage Jenkins” and choose “Configure System” menu item.
+
+<img width="930" alt="Screenshot 2022-12-02 at 01 51 39" src="https://user-images.githubusercontent.com/61475969/205196695-88c2799d-342c-4a0e-9b22-21bfe8efdab6.png">
+
+Save the configuration, open your Jenkins job/project configuration page and add another one “Post-build Action”.
+
+<img width="783" alt="Screenshot 2022-12-02 at 01 52 54" src="https://user-images.githubusercontent.com/61475969/205196825-8541db1c-e92c-4dbc-b3b5-e42d6d2b7e73.png">
+
+
+Configure it to send all files produced by the build into our previouslys define remote directory. In our case we want to copy all files and directories - so we use "**".
+
+If you want to apply some particular pattern to define which files to send - use this syntax.
+
+<img width="765" alt="Screenshot 2022-12-02 at 01 54 27" src="https://user-images.githubusercontent.com/61475969/205197033-256abb45-087b-4aac-8378-c4110cf35460.png">
+
+Make changes in the README.MD file in the git account and confirm if it will sync along with jenkins and show in the NFS server.
+
+
+
+
+
+
+
 
 
 
