@@ -9,7 +9,7 @@ Jenkins is an open-source Continuous Integration server written in Java for orch
 
 1 - Installing Jenkins Server
 
-Spun up a web server on AWS cloud and SSH into it.
+Launch an EC2 instance for server role and take SSH from system terminal
 
 Installing JDK which is an important Java based package required for Jenkins to run.
 
