@@ -58,12 +58,6 @@ On the jenkins server, create a new freestyle project by clicking on create a ne
 
 In configuration of the Jenkins freestyle job choose Git repository, provide there the link to the GitHub repository and credentials (user/password) so Jenkins could access files in the repository. Also specify the branch containing code
 
-<img width="997" alt="Screenshot 2022-12-02 at 01 15 22" src="https://user-images.githubusercontent.com/61475969/205192689-f4557818-0358-48da-b72d-66006efb3160.png">
-
-<img width="882" alt="Screenshot 2022-12-02 at 01 15 54" src="https://user-images.githubusercontent.com/61475969/205192759-ad66aa51-d9f2-48e2-8a20-93b8c64e637f.png">
-
-<img width="830" alt="Screenshot 2022-12-02 at 01 16 46" src="https://user-images.githubusercontent.com/61475969/205192837-a38456d6-ab88-47de-96d8-edf04b5bd1a7.png">
-
 Specify the particular trigger to use for triggering the job. Click "Configure" on the jenkins job and add these two configurations
 
 1. Configure triggering the job from GitHub webhook:
